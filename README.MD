@@ -66,3 +66,6 @@ Use URL: http://code-influxdb-1:8086.
 Import the urban-emissions-hub.json from the /exports folder.
 
 
+# find export folder
+Only members of the NCI domain can access it:
+[text](https://studentncirl-my.sharepoint.com/:f:/g/personal/x22120921_student_ncirl_ie/IgDRtNIZt8GhQ6-hnKXD5FUfAYvSevUEPGPCDkBGY2zNMiU?e=wQAMDU)
