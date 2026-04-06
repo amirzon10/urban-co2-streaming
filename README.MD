@@ -1,72 +1,67 @@
-Project Setup & Reproducibility
+# Project Setup & Reproducibility
 
-This project provides two setup options:
+This project can be run either using pre-configured Docker images or by building the system from scratch.
 
-Using pre-configured Docker images (recommended for quick replication)
-Building the system from scratch
-Option 1: Pre-configured Environment (Recommended)
+## Option 1: Pre-configured Environment
 
 Use this option to reproduce the environment exactly as submitted.
 
-Load Docker Images
+### Load Docker Images
+Run the following commands (images must be in the `exports` folder):
 
-Ensure the saved images are located in the exports directory, then run:
+docker load -i exports/saved_influx.tar  
+docker load -i exports/saved_grafana.tar  
 
-docker load -i exports/saved_influx.tar
-docker load -i exports/saved_grafana.tar
-Launch the System
+### Start the System
+Navigate to the `docker` directory and run:
 
-Navigate to the /docker directory and execute:
+docker compose up -d  
 
-docker compose up -d
-Result
-InfluxDB: Pre-initialized with the iot_data bucket and required API token
-Grafana: Pre-configured with the Urban Emissions Hub dashboard and connected data source
+### Result
+- InfluxDB is pre-initialized with the `iot_data` bucket and API token  
+- Grafana is pre-configured with the dashboard and data source  
+- No additional setup is required  
 
-No additional configuration is required.
+## Option 2: Build from Scratch
 
-Option 2: Build from Scratch
+### Start the Stack
+From the `docker` directory:
 
-Use this option to manually set up the full infrastructure.
+docker compose up -d  
 
-Launch the Stack
+### Initialize InfluxDB
+1. Open http://localhost:8086  
+2. Create:
+   - User  
+   - Organization: MyOrg  
+   - Bucket: iot_data  
+3. Generate an API token under Data → API Tokens  
 
-From the /docker directory:
+Add the token to:
+- src/producer.py  
+- src/processor.py  
 
-docker compose up -d
-Initialize InfluxDB
-Open: http://localhost:8086
-Create:
-User
-Organization: MyOrg
-Bucket: iot_data
-Generate an API token:
-Navigate to Data → API Tokens
-Create an All Access Token
+### Install Dependencies
 
-Important:
-Add the generated token to the INFLUX_TOKEN variable in:
+pip install -r src/requirements.txt  
 
-src/producer.py
-src/processor.py
-Install Dependencies
-pip install -r src/requirements.txt
-Start Services
-Stream Processor
-python src/processor.py worker
-Traffic Simulation (Producer)
-python src/producer.py
-Configure Grafana
-Open: http://localhost:3000
-Add a new data source:
-Type: InfluxDB
-Query Language: Flux
-URL: http://code-influxdb-1:8086
-Import the dashboard:
-File: urban-emissions-hub.json (located in /exports)
-Export Files
+### Run the Services
 
-The exported Docker images and dashboard files are available at:
+Start the stream processor:
 
-Only accessible to NCI domain members:
+python src/processor.py worker  
+
+Start the producer:
+
+python src/producer.py  
+
+### Configure Grafana
+1. Open http://localhost:3000  
+2. Add InfluxDB as a data source (Flux)  
+3. Use URL: http://code-influxdb-1:8086  
+4. Import `urban-emissions-hub.json` from the `exports` folder  
+
+## Export Files
+
+Available at (NCI access only):  
 https://studentncirl-my.sharepoint.com/:f:/g/personal/x22120921_student_ncirl_ie/IgDRtNIZt8GhQ6-hnKXD5FUfAYvSevUEPGPCDkBGY2zNMiU?e=wQAMDU
